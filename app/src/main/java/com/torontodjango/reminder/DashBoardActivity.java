@@ -1,12 +1,17 @@
 package com.torontodjango.reminder;
 
+import android.Manifest;
 import android.app.Activity;
 import android.app.PendingIntent;
 import android.app.AlarmManager;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.os.Build;
 import android.support.annotation.NonNull;
+import android.support.annotation.RequiresApi;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.view.GravityCompat;
 import android.support.v7.app.AppCompatActivity;
@@ -106,12 +111,14 @@ class TaskListAdapter extends BaseAdapter{
         return position;
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.KITKAT)
     public void add(Task Task)
     {
         dao.add(Task);
         update();
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.KITKAT)
     public void delete(int index)
     {
         cancelTask(dao.get(index));
@@ -119,12 +126,14 @@ class TaskListAdapter extends BaseAdapter{
         update();
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.KITKAT)
     public void update(Task Task)
     {
         dao.update(Task);
         update();
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.KITKAT)
     private void update()
     {
         for (int i = 0; i < dao.size(); i++)
@@ -133,6 +142,7 @@ class TaskListAdapter extends BaseAdapter{
         notifyDataSetChanged();
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.KITKAT)
     private void setTask(Task task){
         PendingIntent sender;
         Intent intent;
@@ -144,7 +154,8 @@ class TaskListAdapter extends BaseAdapter{
             intent = new Intent(context, TaskReceiver.class);
             task.toIntent(intent);
             sender = PendingIntent.getBroadcast(context, (int)task.getId(), intent, PendingIntent.FLAG_UPDATE_CURRENT);
-            alarmManager.setExact(AlarmManager.RTC_WAKEUP, task.getDate(), sender);
+                alarmManager.setExact(AlarmManager.RTC_WAKEUP, task.getDate(), sender);
+
         }
     }
 
@@ -174,6 +185,8 @@ public class DashBoardActivity extends AppCompatActivity implements TasksFragmen
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
+        ActivityCompat.requestPermissions(this,new String[] {Manifest.permission.FOREGROUND_SERVICE
+        }, PackageManager.PERMISSION_GRANTED);
         Log.d(TAG, "starting dashboard activity");
 
         taskListAdapter = new TaskListAdapter(this);
@@ -278,6 +291,7 @@ public class DashBoardActivity extends AppCompatActivity implements TasksFragmen
         startActivityForResult(intent, EDIT_ACTIVITY);
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.KITKAT)
     public void onDeleteClick(View view){
         View parentRow = (View) view.getParent();
         ListView listView = (ListView) parentRow.getParent().getParent();
@@ -286,6 +300,7 @@ public class DashBoardActivity extends AppCompatActivity implements TasksFragmen
     }
 
 
+    @RequiresApi(api = Build.VERSION_CODES.KITKAT)
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data)
     {
@@ -316,6 +331,7 @@ public class DashBoardActivity extends AppCompatActivity implements TasksFragmen
         }
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.KITKAT)
     @Override
     public boolean onContextItemSelected(MenuItem item)
     {

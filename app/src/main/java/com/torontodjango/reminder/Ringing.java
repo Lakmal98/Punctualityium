@@ -11,7 +11,9 @@ import android.content.Intent;
 import android.media.Ringtone;
 import android.media.RingtoneManager;
 import android.content.Context;
+import android.os.Build;
 import android.os.Bundle;
+import android.support.annotation.RequiresApi;
 import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
@@ -106,6 +108,7 @@ public class Ringing extends Activity {
     }
 
 
+    @RequiresApi(api = Build.VERSION_CODES.O)
     private void addNotification(Task task)
     {
         NotificationManager notificationManager = (NotificationManager)getSystemService(Context.NOTIFICATION_SERVICE);
